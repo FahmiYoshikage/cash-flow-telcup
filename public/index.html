@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transparansi Dana Telkom Cup TRI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #e63946 0%, #d62828 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .admin-link {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid white;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .admin-link:hover {
+            background: white;
+            color: #e63946;
+        }
+        
+        .budget-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .budget-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .budget-card h3 {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .budget-card .amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #212529;
+        }
+        
+        .budget-card.total { border-left: 4px solid #0d6efd; }
+        .budget-card.spent { border-left: 4px solid #dc3545; }
+        .budget-card.remaining { border-left: 4px solid #198754; }
+        
+        .content-section {
+            padding: 30px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #495057;
+            color: white;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        th {
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        tbody tr {
+            transition: background 0.3s;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .category-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .cat-transport { background: #cfe2ff; color: #084298; }
+        .cat-konsumsi { background: #d1e7dd; color: #0f5132; }
+        .cat-perlengkapan { background: #fff3cd; color: #664d03; }
+        .cat-administrasi { background: #f8d7da; color: #842029; }
+        .cat-lainnya { background: #e2e3e5; color: #41464b; }
+        
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .refresh-btn {
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .refresh-btn:hover {
+            background: #0b5ed7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/admin" class="admin-link">🔐 Admin</a>
+            <h1>📊 TRANSPARANSI DANA LOMBA</h1>
+            <p>Telkom Cup TRI - Laporan Keuangan Real-Time</p>
+        </div>
+        
+        <div class="budget-summary">
+            <div class="budget-card total">
+                <h3>Total Budget</h3>
+                <div class="amount">Rp <span id="totalBudget">-</span></div>
+            </div>
+            <div class="budget-card spent">
+                <h3>Total Pengeluaran</h3>
+                <div class="amount">Rp <span id="totalSpent">-</span></div>
+            </div>
+            <div class="budget-card remaining">
+                <h3>Sisa Dana</h3>
+                <div class="amount">Rp <span id="remaining">-</span></div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <button class="refresh-btn" onclick="loadData()">🔄 Refresh Data</button>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Keterangan</th>
+                            <th>Kategori</th>
+                            <th>Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenseTable">
+                        <tr class="loading">
+                            <td colspan="5">Memuat data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = '/api/expenses';
+        
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        
+        function getCategoryClass(category) {
+            return 'cat-' + category.toLowerCase();
+        }
+        
+        async function loadSummary() {
+            try {
+                const response = await fetch(`${API_URL}/summary`);
+                const data = await response.json();
+                
+                document.getElementById('totalBudget').textContent = formatNumber(data.totalBudget);
+                document.getElementById('totalSpent').textContent = formatNumber(data.totalSpent);
+                document.getElementById('remaining').textContent = formatNumber(data.remaining);
+                
+                if (data.remaining < 0) {
+                    document.getElementById('remaining').style.color = '#dc3545';
+                } else {
+                    document.getElementById('remaining').style.color = '#212529';
+                }
+            } catch (error) {
+                console.error('Error loading summary:', error);
+            }
+        }
+        
+        async function loadExpenses() {
+            try {
+                const response = await fetch(API_URL);
+                const expenses = await response.json();
+                
+                const tbody = document.getElementById('expenseTable');
+                
+                if (expenses.length === 0) {
+                    tbody.innerHTML = `
+                        <tr class="loading">
+                            <td colspan="5">Belum ada data pengeluaran</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                tbody.innerHTML = expenses.map((exp, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${exp.date}</td>
+                        <td>${exp.description}</td>
+                        <td><span class="category-badge ${getCategoryClass(exp.category)}">${exp.category}</span></td>
+                        <td>Rp ${formatNumber(exp.amount)}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading expenses:', error);
+                document.getElementById('expenseTable').innerHTML = `
+                    <tr class="loading">
+                        <td colspan="5">Error memuat data. Silakan refresh halaman.</td>
+                    </tr>
+                `;
+            }
+        }
+        
+        function loadData() {
+            loadSummary();
+            loadExpenses();
+        }
+        
+        // Load data saat halaman dibuka
+        loadData();
+        
+        // Auto refresh setiap 30 detik
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>

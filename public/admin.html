@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Telkom Cup TRI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #212529;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Admin Dashboard Styles */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #e63946 0%, #d62828 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .logout-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .logout-btn:hover {
+            background: white;
+            color: #e63946;
+        }
+        
+        .budget-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .budget-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .budget-card h3 {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .budget-card .amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #212529;
+        }
+        
+        .budget-card.total { border-left: 4px solid #0d6efd; }
+        .budget-card.spent { border-left: 4px solid #dc3545; }
+        .budget-card.remaining { border-left: 4px solid #198754; }
+        
+        .input-section {
+            padding: 30px;
+        }
+        
+        .input-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: end;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #495057;
+            color: white;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        th {
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        tbody tr {
+            transition: background 0.3s;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        
+        .category-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .cat-transport { background: #cfe2ff; color: #084298; }
+        .cat-konsumsi { background: #d1e7dd; color: #0f5132; }
+        .cat-perlengkapan { background: #fff3cd; color: #664d03; }
+        .cat-administrasi { background: #f8d7da; color: #842029; }
+        .cat-lainnya { background: #e2e3e5; color: #41464b; }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="loginSection" class="login-container">
+        <h2>🔐 Admin Login</h2>
+        <div id="loginError" class="alert alert-error hidden"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        <a href="/" class="back-link">← Kembali ke halaman utama</a>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminSection" class="container hidden">
+        <div class="header">
+            <button class="logout-btn" onclick="logout()">Logout</button>
+            <h1>📊 ADMIN DASHBOARD</h1>
+            <p>Telkom Cup TRI - Kelola Pengeluaran</p>
+        </div>
+        
+        <div class="budget-summary">
+            <div class="budget-card total">
+                <h3>Total Budget</h3>
+                <div class="amount">Rp <span id="totalBudget">-</span></div>
+            </div>
+            <div class="budget-card spent">
+                <h3>Total Pengeluaran</h3>
+                <div class="amount">Rp <span id="totalSpent">-</span></div>
+            </div>
+            <div class="budget-card remaining">
+                <h3>Sisa Dana</h3>
+                <div class="amount">Rp <span id="remaining">-</span></div>
+            </div>
+        </div>
+        
+        <div class="input-section">
+            <h2 style="margin-bottom: 20px; color: #212529;">Tambah Pengeluaran</h2>
+            
+            <div class="input-form">
+                <div class="form-group">
+                    <label>Keterangan</label>
+                    <input type="text" id="description" placeholder="Contoh: Transportasi ke venue">
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="category">
+                        <option value="Transport">Transport</option>
+                        <option value="Konsumsi">Konsumsi</option>
+                        <option value="Perlengkapan">Perlengkapan</option>
+                        <option value="Administrasi">Administrasi</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Jumlah (Rp)</label>
+                    <input type="number" id="amount" placeholder="0" min="0">
+                </div>
+                <button class="btn btn-primary" onclick="addExpense()">+ Tambah</button>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Keterangan</th>
+                            <th>Kategori</th>
+                            <th>Jumlah</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenseTable">
+                        <tr>
+                            <td colspan="6" style="text-align: center;">Memuat data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = '/api';
+        let token = null;
+        
+        // Check if already logged in
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_URL}/auth/check`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (data.authenticated) {
+                    showAdminDashboard();
+                }
+            } catch (error) {
+                console.log('Not authenticated');
+            }
+        }
+        
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    token = data.token;
+                    showAdminDashboard();
+                } else {
+                    showError(data.message);
+                }
+            } catch (error) {
+                showError('Terjadi kesalahan. Silakan coba lagi.');
+            }
+        });
+        
+        // Logout
+        async function logout() {
+            try {
+                await fetch(`${API_URL}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                token = null;
+                document.getElementById('loginSection').classList.remove('hidden');
+                document.getElementById('adminSection').classList.add('hidden');
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 5000);
+        }
+        
+        function showAdminDashboard() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.remove('hidden');
+            loadData();
+        }
+        
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        
+        function getCategoryClass(category) {
+            return 'cat-' + category.toLowerCase();
+        }
+        
+        async function loadSummary() {
+            try {
+                const response = await fetch(`${API_URL}/expenses/summary`);
+                const data = await response.json();
+                
+                document.getElementById('totalBudget').textContent = formatNumber(data.totalBudget);
+                document.getElementById('totalSpent').textContent = formatNumber(data.totalSpent);
+                document.getElementById('remaining').textContent = formatNumber(data.remaining);
+                
+                if (data.remaining < 0) {
+                    document.getElementById('remaining').style.color = '#dc3545';
+                } else {
+                    document.getElementById('remaining').style.color = '#212529';
+                }
+            } catch (error) {
+                console.error('Error loading summary:', error);
+            }
+        }
+        
+        async function loadExpenses() {
+            try {
+                const response = await fetch(`${API_URL}/expenses`);
+                const expenses = await response.json();
+                
+                const tbody = document.getElementById('expenseTable');
+                
+                if (expenses.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center;">Belum ada data pengeluaran</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                tbody.innerHTML = expenses.map((exp, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${exp.date}</td>
+                        <td>${exp.description}</td>
+                        <td><span class="category-badge ${getCategoryClass(exp.category)}">${exp.category}</span></td>
+                        <td>Rp ${formatNumber(exp.amount)}</td>
+                        <td><button class="delete-btn" onclick="deleteExpense('${exp._id}')">Hapus</button></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading expenses:', error);
+            }
+        }
+        
+        async function addExpense() {
+            const description = document.getElementById('description').value.trim();
+            const category = document.getElementById('category').value;
+            const amount = parseInt(document.getElementById('amount').value) || 0;
+            
+            if (!description) {
+                alert('Mohon isi keterangan pengeluaran!');
+                return;
+            }
+            
+            if (amount <= 0) {
+                alert('Mohon isi jumlah pengeluaran dengan benar!');
+                return;
+            }
+            
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('id-ID', { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric' 
+            });
+            
+            try {
+                const response = await fetch(`${API_URL}/expenses`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        date: dateStr,
+                        description,
+                        category,
+                        amount
+                    })
+                });
+                
+                if (response.ok) {
+                    document.getElementById('description').value = '';
+                    document.getElementById('amount').value = '';
+                    loadData();
+                } else {
+                    alert('Gagal menambahkan data. Silakan login ulang.');
+                }
+            } catch (error) {
+                console.error('Error adding expense:', error);
+                alert('Terjadi kesalahan. Silakan coba lagi.');
+            }
+        }
+        
+        async function deleteExpense(id) {
+            if (!confirm('Yakin ingin menghapus data ini?')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/expenses/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    loadData();
+                } else {
+                    alert('Gagal menghapus data. Silakan login ulang.');
+                }
+            } catch (error) {
+                console.error('Error deleting expense:', error);
+                alert('Terjadi kesalahan. Silakan coba lagi.');
+            }
+        }
+        
+        function loadData() {
+            loadSummary();
+            loadExpenses();
+        }
+        
+        // Check auth on page load
+        checkAuth();
+    </script>
+</body>
+</html>
