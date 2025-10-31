@@ -138,7 +138,7 @@ services:
       - JWT_SECRET=telkom_cup_super_secret_key_change_in_production_2024
       - NODE_ENV=production
     ports:
-      - "8765:3000"
+      - "8766:3000"
     depends_on:
       mongodb:
         condition: service_healthy
@@ -547,8 +547,8 @@ echo ""
 echo -e "${GREEN}✅ DEPLOYMENT COMPLETE!${NC}"
 echo ""
 echo -e "${GREEN}📊 Application is running on:${NC}"
-echo -e "   Public: http://localhost:8765"
-echo -e "   Admin:  http://localhost:8765/admin"
+echo -e "   Public: http://localhost:8766"
+echo -e "   Admin:  http://localhost:8766/admin"
 echo ""
 echo -e "${GREEN}🔐 Admin Credentials:${NC}"
 echo -e "   Username: admin"
@@ -565,7 +565,7 @@ echo ""
 echo -e "${GREEN}📝 Next Steps:${NC}"
 echo "1. Copy index.html and admin.html from artifacts to /opt/telkom-cup/public/"
 echo "2. Restart app: cd /opt/telkom-cup && docker-compose restart app"
-echo "3. Update Cloudflare config to point to localhost:8765"
-echo "4. Test: curl http://localhost:8765/health"
+echo "3. Update Cloudflare config to point to localhost:8766"
+echo "4. Test: curl http://localhost:8766/health"
 echo ""
 echo -e "${GREEN}🎉 Happy deploying!${NC}"
