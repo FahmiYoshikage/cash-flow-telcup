@@ -24,7 +24,7 @@ services:
       - JWT_SECRET=telkom_cup_super_secret_key_change_in_production_2024
       - NODE_ENV=production
     ports:
-      - "8765:3000"
+      - "8766:3000"
     depends_on:
       - mongodb
     networks:
