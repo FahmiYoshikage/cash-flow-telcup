@@ -95,6 +95,8 @@ docker-compose logs -f
 
 - [DEBUGGING-GUIDE.md](DEBUGGING-GUIDE.md) - Complete debugging guide untuk vibes coders
 - [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Common issues & solutions
+- [CLOUDFLARE-TUNNEL-FIX.md](CLOUDFLARE-TUNNEL-FIX.md) - Fix Cloudflare Tunnel issues
+- [CHEAT-SHEET.md](CHEAT-SHEET.md) - Quick reference commands
 
 ## 🛠️ Useful Commands
 

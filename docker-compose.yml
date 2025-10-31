@@ -9,8 +9,6 @@ services:
       MONGO_INITDB_DATABASE: telkom_cup_transparency
     volumes:
       - mongodb_data:/data/db
-    ports:
-      - "27017:27017"
     networks:
       - telkom_network
     healthcheck:
