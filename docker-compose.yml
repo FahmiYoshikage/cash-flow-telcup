@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: telkom_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: telkom_cup_transparency
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - telkom_network
+
+  app:
+    build: .
+    container_name: telkom_app
+    restart: unless-stopped
+    environment:
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017/telkom_cup_transparency
+      - JWT_SECRET=telkom_cup_super_secret_key_change_in_production_2024
+      - NODE_ENV=production
+    ports:
+      - "8765:3000"
+    depends_on:
+      - mongodb
+    networks:
+      - telkom_network
+    volumes:
+      - ./logs:/app/logs
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  telkom_network:
+    driver: bridge
