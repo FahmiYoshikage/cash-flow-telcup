@@ -23,6 +23,16 @@ app.use(express.static('public'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/expenses', require('./routes/expense'));
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 // Serve admin page
 app.get('/admin', (req, res) => {
   res.sendFile(__dirname + '/public/admin.html');

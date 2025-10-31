@@ -51,6 +51,12 @@ bash fix-mongodb.sh
 ```
 Fix MongoDB unhealthy issues automatically.
 
+### 6. **fix-health-cloudflare.sh** - Health & Cloudflare Fixer 🌐
+```bash
+bash fix-health-cloudflare.sh
+```
+Fix missing /health endpoint and Cloudflare challenge issues.
+
 📖 **Full Guide**: Baca [DEBUGGING-GUIDE.md](DEBUGGING-GUIDE.md) untuk tutorial lengkap!
 
 ## �🔧 Manual Fix
@@ -95,7 +101,8 @@ docker-compose logs -f
 
 - [DEBUGGING-GUIDE.md](DEBUGGING-GUIDE.md) - Complete debugging guide untuk vibes coders
 - [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Common issues & solutions
-- [CLOUDFLARE-TUNNEL-FIX.md](CLOUDFLARE-TUNNEL-FIX.md) - Fix Cloudflare Tunnel issues
+- [CLOUDFLARE-TUNNEL-FIX.md](CLOUDFLARE-TUNNEL-FIX.md) - Fix Cloudflare Tunnel connection issues
+- [CLOUDFLARE-SECURITY-FIX.md](CLOUDFLARE-SECURITY-FIX.md) - Fix Cloudflare challenge/security blocking
 - [CHEAT-SHEET.md](CHEAT-SHEET.md) - Quick reference commands
 
 ## 🛠️ Useful Commands
