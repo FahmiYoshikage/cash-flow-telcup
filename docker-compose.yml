@@ -13,6 +13,12 @@ services:
       - "27017:27017"
     networks:
       - telkom_network
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
 
   app:
     build: .

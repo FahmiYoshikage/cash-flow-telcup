@@ -123,10 +123,11 @@ services:
     networks:
       - telkom_network
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 40s
 
   app:
     build: .
@@ -537,7 +538,18 @@ docker-compose up -d
 
 echo ""
 echo -e "${YELLOW}⏳ Waiting for services to be ready...${NC}"
-sleep 10
+sleep 15
+
+# Check if MongoDB is ready
+echo -e "${YELLOW}🔍 Checking MongoDB status...${NC}"
+for i in {1..10}; do
+    if docker exec telkom_mongodb mongosh --quiet --eval "db.adminCommand('ping').ok" &>/dev/null; then
+        echo -e "${GREEN}✅ MongoDB is ready!${NC}"
+        break
+    fi
+    echo "Waiting for MongoDB... attempt $i/10"
+    sleep 3
+done
 
 # Create admin
 echo -e "${YELLOW}👤 Creating admin user...${NC}"
